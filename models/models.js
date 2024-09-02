@@ -1,5 +1,5 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import sequelize from '../db';
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../db.js';
 
 class Transaction extends Model {}
 Transaction.init({
@@ -11,7 +11,7 @@ Transaction.init({
     date: {
         type: DataTypes.DATEONLY,
         allowNull: true,
-        defaultValue: Sequelize.NOW,
+        defaultValue: sequelize.NOW,
     },
     txnType: {
         type: DataTypes.STRING,
@@ -56,4 +56,4 @@ User.init({
 });
 
 
-export default Transaction; User
+export { Transaction, User };

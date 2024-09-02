@@ -2,14 +2,14 @@ import express from 'express'
 import logger from './middlewares/logger.js';
 import notFound from './middlewares/notFound.js'
 import errorHandler from './middlewares/errorHandler.js';
-import updateDb from './dbmigration.js';
+// import updateDb from './dbmigration.js';
 
 const port = process.env.PORT || 8000;
 const app = express()
 
 
 //dbUpdate
-app.use(updateDb);
+// app.use(updateDb);
 
 
 // middleWares
@@ -18,7 +18,7 @@ app.use(logger);
 
 
 // Routes
-app.use('/api/v1', posts);
+// app.use('/api/v1', posts);
 
 
 // errorHandlers

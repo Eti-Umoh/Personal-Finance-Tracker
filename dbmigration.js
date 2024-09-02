@@ -1,4 +1,4 @@
-import sequelize from './db';
+import sequelize from './db.js';
 import { Transaction, User } from './models/models.js';
 
 const updateDb = (async () => {
