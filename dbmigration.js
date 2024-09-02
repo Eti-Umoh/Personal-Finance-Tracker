@@ -1,7 +1,7 @@
 import sequelize from './db.js';
 import { Transaction, User } from './models/models.js';
 
-const updateDb = (async () => {
+const updateDb = async () => {
     try {
         await sequelize.sync(); // This creates the tables if they don't exist
         console.log('Database synced');
@@ -10,7 +10,7 @@ const updateDb = (async () => {
     } finally {
         await sequelize.close();
     }
-})();
+};
 
 
 export default updateDb;

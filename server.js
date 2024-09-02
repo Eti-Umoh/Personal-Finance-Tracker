@@ -2,14 +2,16 @@ import express from 'express'
 import logger from './middlewares/logger.js';
 import notFound from './middlewares/notFound.js'
 import errorHandler from './middlewares/errorHandler.js';
-// import updateDb from './dbmigration.js';
+import updateDb from './dbmigration.js';
 
 const port = process.env.PORT || 8000;
-const app = express()
+const app = express();
 
 
-//dbUpdate
-// app.use(updateDb);
+// Run database update
+(async () => {
+    await updateDb();
+})();
 
 
 // middleWares
