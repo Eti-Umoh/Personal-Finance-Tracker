@@ -2,20 +2,23 @@ import express from 'express'
 import logger from './middlewares/logger.js';
 import notFound from './middlewares/notFound.js'
 import errorHandler from './middlewares/errorHandler.js';
+import updateDb from './dbmigration.js';
 
 const port = process.env.PORT || 8000;
 const app = express()
 
-// Body parser middleware
-app.use(express.json());
+
+//dbUpdate
+app.use(updateDb);
 
 
 // middleWares
-app.use(logger)
+app.use(express.json());
+app.use(logger);
 
 
 // Routes
-app.use('/api/posts', posts);
+app.use('/api/v1', posts);
 
 
 // errorHandlers

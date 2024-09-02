@@ -56,4 +56,4 @@ User.init({
 });
 
 
-module.exports = Transaction;
+export default Transaction; User
