@@ -30,31 +30,28 @@ Transaction.init({
 });
 
 
-class  extends Model {}
-Transaction.init({
-    amount: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-        defaultValue: 0,
-    },
-    date: {
-        type: DataTypes.DATEONLY,
+class User extends Model {}
+User.init({
+    firstName: {
+        type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: Sequelize.NOW,
     },
-    txnType: {
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    emailAddress: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    description: {
+    password: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: "noDescription",
     },
 }, {
     sequelize,
-    modelName: 'Transaction',
-    tableName: 'transactions',
+    modelName: 'User',
+    tableName: 'users',
     timestamps: true, // Automatically adds createdAt and updatedAt fields
 });
 
