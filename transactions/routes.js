@@ -3,6 +3,6 @@ const transactionRouter = express.Router();
 import { createTransaction } from './utils.js';
 
 
-router.post('/', createTransaction);
+transactionRouter.post('/', createTransaction);
 
 export default transactionRouter;
