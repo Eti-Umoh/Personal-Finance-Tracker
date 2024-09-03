@@ -22,6 +22,14 @@ Transaction.init({
         allowNull: true,
         defaultValue: "noDescription",
     },
+    userId: { // Foreign key for User
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'users', // 'users' refers to table name
+            key: 'id',      // 'id' refers to column name in users table
+        }
+    },
 }, {
     sequelize,
     modelName: 'Transaction',
@@ -57,3 +65,16 @@ User.init({
 
 
 export { Transaction, User };
+
+
+// A transaction belongs to a user
+Transaction.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'owner', // Optional: alias for the association
+});
+
+// A user can have many transactions
+User.hasMany(Transaction, {
+    foreignKey: 'userId',
+    as: 'transactions', // Optional: alias for the association
+});
