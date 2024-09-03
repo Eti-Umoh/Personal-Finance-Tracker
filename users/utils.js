@@ -2,10 +2,10 @@ import { User } from "../models/models.js";
 
 
 export const createUser = async (req, res, next) => {
-    const firstName = req.body.firstName
-    const lastName = req.body.lastName
-    const emailAddress = req.body.emailAddress
-    const password = req.body.password
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const emailAddress = req.body.emailAddress;
+    const password = req.body.password;
 
     if (!req.body.emailAddress) {
         const error = new Error('emailAddress is missing in the req body');

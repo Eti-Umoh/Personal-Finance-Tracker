@@ -2,10 +2,10 @@ import { Transaction } from "../models/models.js";
 
 
 export const createTransaction = async (req, res, next) => {
-    const amount = req.body.amount
-    const type = req.body.type
-    const description = req.body.description
-    const date = req.body.date
+    const amount = req.body.amount;
+    const type = req.body.type;
+    const description = req.body.description;
+    const date = req.body.date;
 
     if (!req.body.amount) {
         const error = new Error('amount is missing in the req body');
