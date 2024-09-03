@@ -1,6 +1,17 @@
 import { UserAccessToken, User } from "../models/models";
 
 
+const generateToken = async (length = 32) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        token += characters[randomIndex];
+    }
+    return token;
+};
+
+
 const generateUserAccessToken = async (existUser) => {
     const userId = existUser.id;
     const accessToken = UserAccessToken.findOne({ where: { userId: userId } });
@@ -39,7 +50,7 @@ const authenticateUser = async (emailAddress, password) => {
 };
 
 
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
     const emailAddress = req.body.emailAddress;
     const password = req.body.password;
 
