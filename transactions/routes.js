@@ -1,6 +1,8 @@
 import express from 'express';
-const router = express.Router();
+const transactionRouter = express.Router();
 import { createTransaction } from './utils.js';
 
 
 router.post('/', createTransaction);
+
+export default transactionRouter;

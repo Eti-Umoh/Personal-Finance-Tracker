@@ -3,6 +3,7 @@ import logger from './middlewares/logger.js';
 import notFound from './middlewares/notFound.js'
 import errorHandler from './middlewares/errorHandler.js';
 import updateDb from './dbmigration.js';
+import transactionRouter from './transactions/routes.js';
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -20,7 +21,7 @@ app.use(logger);
 
 
 // Routes
-// app.use('/api/v1', posts);
+app.use('/api/v1/transactions', transactionRouter);
 
 
 // errorHandlers
