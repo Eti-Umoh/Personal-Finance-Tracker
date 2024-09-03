@@ -1,4 +1,4 @@
-import { UserAccessToken, User } from "../models/models";
+import {  User, UserAccessToken } from "../models/models.js";
 
 
 const generateToken = async (length = 32) => {

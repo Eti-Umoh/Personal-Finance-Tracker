@@ -82,7 +82,7 @@ UserAccessToken.init({
     expiresAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 120 MINUTE'),
+        defaultValue: sequelize.literal("NOW() + INTERVAL '120 MINUTES'"),
     },
 }, {
     sequelize,
@@ -116,4 +116,4 @@ User.hasOne(UserAccessToken, {
     as: 'userAccessTokens', // Optional: alias for the association
 });
 
-export { Transaction, User, UserAccessToken };
+export { Transaction, User, UserAccessToken};

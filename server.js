@@ -11,7 +11,7 @@ const port = process.env.PORT || 8000;
 const app = express();
 
 
-// Run database update
+// // Run database update
 (async () => {
     await updateDb();
 })();
