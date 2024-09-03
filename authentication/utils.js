@@ -1,7 +1,7 @@
 import { UserAccessToken, User } from "../models/models";
 
 
-const generateUserAccessToken = (existUser) => {
+const generateUserAccessToken = async (existUser) => {
     const userId = existUser.id;
     const accessToken = UserAccessToken.findOne({ where: { userId: userId } });
 
@@ -28,15 +28,15 @@ const generateUserAccessToken = (existUser) => {
 };
 
 
-const authenticateUser = (emailAddress, password) => {
-        const existUser = await User.();
-        if (existUser) {
-            return existUser;
-        }
-        else {
-            return null
-        }
-    };
+const authenticateUser = async (emailAddress, password) => {
+    const existUser = await User.findOne({ where: { emailAddress: emailAddress } });
+
+    if (existUser && await bcrypt.compare(password, existUser.password)) {
+        return existUser;
+    } else {
+        return null;
+    }
+};
 
 
 export const login = (req, res, next) => {
