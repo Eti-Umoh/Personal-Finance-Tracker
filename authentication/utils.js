@@ -1,22 +1,40 @@
-const generateUserAccessToken = () => {
-    try {
-        const existUser = await User.();
-        res.status(201).json(existUser);
-    } catch (error) {
-        next(error);
-    }
+import { UserAccessToken, User } from "../models/models";
 
+
+const generateUserAccessToken = (existUser) => {
+    const userId = existUser.id
+    const accessToken = UserAccessToken.findOne()
+    if (!accessToken) {
+        const newUserAccessToken = await UserAccessToken.create(
+            {
+                token: token,
+                userId: userId,
+            });
+        return newUserAccessToken;
+    }
+    else {
+        if (accessToken.expiresAt) {
+
+        }
+        else {
+            return accessToken
+        }
+    }
 };
+
 
 const authenticateUser = (emailAddress, password) => {
-    if (emailAddress) {
         const existUser = await User.();
-        return existUser;
-    }
+        if (existUser) {
+            return existUser;
+        }
+        else {
+            return null
+        }
+    };
 
-};
 
-const login = (req, res, next) => {
+export const login = (req, res, next) => {
     const emailAddress = req.body.emailAddress;
     const password = req.body.password;
 
@@ -38,7 +56,7 @@ const login = (req, res, next) => {
             error.status = 404;
             return next(error);
         }
-        
+
         const accessToken = generateUserAccessToken(existUser)
         if (!accessToken) {
             const error = new Error('Error generating access token');
@@ -46,11 +64,10 @@ const login = (req, res, next) => {
             return next(error);
         }
 
-        res.status(201).json({'User': `${newUser}`, 'accessToken': `${accessToken}`,
+        res.status(201).json({'User': `${existUser}`, 'accessToken': `${accessToken}`,
             'message': 'success'});
 
     } catch (error) {
         next(error);
     }
-
 };

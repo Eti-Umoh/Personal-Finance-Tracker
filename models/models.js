@@ -82,7 +82,7 @@ UserAccessToken.init({
     expiresAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: ,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 120 MINUTE'),
     },
 }, {
     sequelize,

@@ -28,7 +28,7 @@ export const createTransaction = async (req, res, next) => {
                 amount: amount,
                 date: date,
                 txnType: type,
-                desciption: description
+                desciption: description,
             });
         res.status(201).json(newTransaction);
     } catch (error) {

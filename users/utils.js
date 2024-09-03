@@ -27,7 +27,7 @@ export const createUser = async (req, res, next) => {
                 firstName: firstName,
                 lastName: lastName,
                 emailAddress: emailAddress,
-                password: hashPassword
+                password: hashPassword,
             });
         res.status(201).json(newUser);
     } catch (error) {
