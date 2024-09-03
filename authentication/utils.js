@@ -2,9 +2,11 @@ import { UserAccessToken, User } from "../models/models";
 
 
 const generateUserAccessToken = (existUser) => {
-    const userId = existUser.id
-    const accessToken = UserAccessToken.findOne()
+    const userId = existUser.id;
+    const accessToken = UserAccessToken.findOne({ where: { userId: userId } });
+
     if (!accessToken) {
+        const token = generateToken();
         const newUserAccessToken = await UserAccessToken.create(
             {
                 token: token,
@@ -13,11 +15,14 @@ const generateUserAccessToken = (existUser) => {
         return newUserAccessToken;
     }
     else {
-        if (accessToken.expiresAt) {
-
-        }
-        else {
-            return accessToken
+        if (new Date() > accessToken.expiresAt) { // Token has expired
+            const token = generateToken(); // Generate a new token
+            accessToken.token = token;
+            accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
+            await accessToken.save(); // Update the token
+            return accessToken;
+        } else {
+            return accessToken;
         }
     }
 };
