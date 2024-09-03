@@ -1,4 +1,5 @@
 import {  User, UserAccessToken } from "../models/models.js";
+import bcrypt from 'bcrypt';
 
 
 const generateToken = async (length = 32) => {
