@@ -24,7 +24,8 @@ export const createTransaction = async (req, res, next) => {
     }
     try {
         const newTransaction = await Transaction.create(
-            { amount: amount,
+            { 
+                amount: amount,
                 date: date,
                 txnType: type,
                 desciption: description
