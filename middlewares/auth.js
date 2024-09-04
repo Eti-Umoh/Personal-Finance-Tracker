@@ -1,14 +1,24 @@
-const authMiddleware = async (req, res, next) => {
+import { validateAuth } from "../authentication/utils.js";
+
+
+export const authMiddleware = async (req, res, next) => {
     const tokenCondition = (
         !req.path.startsWith("/api/v1/auth/login") &&
         !req.path.startsWith("/api/v1/user/signup")
     );
     if (tokenCondition) {
         const token = req.headers['access-token'];
-        const { response, isValid } = await validateAuth(token, domain); // Assuming validateAuth returns a response object and a boolean
-        if (!isValid) {
-            return res.status(403).json({ detail: response });
+        if (!token) {
+            const error = new Error('Access-Token is missing in the request headers');
+            error.status = 400;
+            return next(error);
         }
+        const existUser = await validateAuth(token); // Assuming validateAuth returns a response object
+        if (!existUser) {
+            const error = new Error('Please Log In');
+            error.status = 403;
+            return next(error);
+        };
     }
 
     return next();

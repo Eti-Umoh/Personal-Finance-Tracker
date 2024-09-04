@@ -6,6 +6,7 @@ import updateDb from './dbmigration.js';
 import transactionRouter from './transactions/routes.js';
 import userRouter from './users/routes.js';
 import authRouter from './authentication/routes.js';
+import { authMiddleware } from './middlewares/auth.js';
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -20,6 +21,8 @@ const app = express();
 // middleWares
 app.use(express.json());
 app.use(logger);
+app.use(authMiddleware);
+
 
 
 // Routes
