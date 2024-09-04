@@ -30,7 +30,7 @@ export const createTransaction = async (req, res, next) => {
                 txnType: type,
                 desciption: description,
             });
-        res.status(201).json(newTransaction);
+        res.status(201).json({'message': 'success', 'User': newTransaction});
     } catch (error) {
         next(error);
     }

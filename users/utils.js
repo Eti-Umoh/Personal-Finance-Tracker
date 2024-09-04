@@ -1,8 +1,20 @@
 import { User } from "../models/models.js";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 
 export const createUser = async (req, res, next) => {
+    const secret = req.headers.secretKey;
+    if (!secret) {
+        const error = new Error('Secret is missing in the request headers');
+        error.status = 400;
+        return next(error);
+    }
+    else if (secret !== process.env.SECRET_KEY) {
+        const error = new Error('Invalid Secret specified in the request headers');
+        error.status = 400;
+        return next(error);
+    }
+
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const emailAddress = req.body.emailAddress;
@@ -30,7 +42,7 @@ export const createUser = async (req, res, next) => {
                 emailAddress: emailAddress,
                 password: hashPassword,
             });
-        res.status(201).json({'message': 'success', 'User': `${newUser}`});
+        res.status(201).json({message: 'success', User: newUser});
     } catch (error) {
         next(error);
     }

@@ -81,7 +81,7 @@ export const login = async (req, res, next) => {
             return next(error);
         }
 
-        res.status(201).json({'User': `${existUser}`, 'accessToken': `${accessToken}`,
+        res.status(201).json({'User': existUser, 'accessToken': accessToken,
             'message': 'success'});
 
     } catch (error) {

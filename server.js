@@ -12,9 +12,9 @@ const app = express();
 
 
 // // Run database update
-(async () => {
-    await updateDb();
-})();
+// (async () => {
+//     await updateDb();
+// })();
 
 
 // middleWares
