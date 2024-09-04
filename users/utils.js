@@ -1,5 +1,6 @@
 import { User } from "../models/models.js";
 import bcrypt from "bcrypt";
+import { userSerializer } from "./serializers.js";
 
 
 export const createUser = async (req, res, next) => {
@@ -30,8 +31,10 @@ export const createUser = async (req, res, next) => {
                 emailAddress: emailAddress,
                 password: hashPassword,
             });
-        res.status(201).json({User: newUser, message: 'success'});
-    } catch (error) {
+        const serializedUser = userSerializer(newUser);
+        res.status(201).json({User: serializedUser, message: 'success'});
+    }
+    catch (error) {
         next(error);
     }
 };

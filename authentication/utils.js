@@ -1,6 +1,6 @@
 import {  User, UserAccessToken } from "../models/models.js";
 import bcrypt from 'bcrypt';
-
+import { userSerializer } from "../users/serializers.js";
 
 const generateToken = async (length = 32) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -81,8 +81,9 @@ export const login = async (req, res, next) => {
             return next(error);
         }
 
-        res.status(200).json({'User': existUser, 'accessToken': accessToken.token,
-            'message': 'success'});
+        const serializedUser = userSerializer(existUser);
+        res.status(200).json({User: serializedUser, accessToken: accessToken.token,
+            message: 'success'});
 
     } catch (error) {
         next(error);

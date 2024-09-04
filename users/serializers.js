@@ -8,9 +8,3 @@ export const userSerializer = async (user) => {
         "updatedAt": user.updatedAt
     };
 };
-
-
-export const usersSerializer = async (users) => {
-    const serializedUsers = users.map(user => userSerializer(user));
-    return serializedUsers;
-};

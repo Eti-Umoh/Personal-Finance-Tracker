@@ -35,7 +35,7 @@ export const createTransaction = async (req, res, next) => {
             });
 
         const serializedTransaction = await transactionSerializer(newTransaction)
-        res.status(201).json({'Transaction': serializedTransaction, 'message': 'success'});
+        res.status(201).json({Transaction: serializedTransaction, message: 'success'});
     }
     catch (error) {
         next(error);
@@ -48,7 +48,7 @@ export const getAllTransactions = async (req, res, next) => {
     try {
         const transactions = await Transaction.findAll({ where: { userId: currentUserId } });
         const serializedTransactions = await transactionsSerializer(transactions);
-        res.status(200).json({'Transactions': serializedTransactions, 'message': 'success'});
+        res.status(200).json({Transactions: serializedTransactions, message: 'success'});
     } 
     catch (error) {
         next(error);
