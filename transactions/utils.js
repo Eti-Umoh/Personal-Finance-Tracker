@@ -32,17 +32,19 @@ export const createTransaction = async (req, res, next) => {
                 description: description,
                 userId: currentUserId
             });
-        res.status(201).json({'message': 'success', 'Transaction': newTransaction});
+        res.status(201).json({'Transaction': newTransaction, 'message': 'success'});
     } catch (error) {
         next(error);
     }
 };
 
-// export const getAllPosts = async (req, res, next) => {
-//     try {
-//         const posts = await Post.findAll();
-//         res.status(200).json(posts);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+
+export const getAllTransactions = async (req, res, next) => {
+    const currentUserId = req.user.id;
+    try {
+        const transactions = await Transaction.findAll({ where: { userId: currentUserId } });
+        res.status(200).json({'Transactions': transactions, 'message': 'success'});
+    } catch (error) {
+        next(error);
+    }
+};
