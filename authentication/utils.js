@@ -15,10 +15,11 @@ const generateToken = async (length = 32) => {
 
 const generateUserAccessToken = async (existUser) => {
     const userId = existUser.id;
-    const accessToken = UserAccessToken.findOne({ where: { userId: userId } });
+    const accessToken = await UserAccessToken.findOne({ where: { userId: userId } });
 
     if (!accessToken) {
-        const token = generateToken();
+        const token = await generateToken();
+        console.log(token)
         const newUserAccessToken = await UserAccessToken.create(
             {
                 token: token,
@@ -28,7 +29,7 @@ const generateUserAccessToken = async (existUser) => {
     }
     else {
         if (new Date() > accessToken.expiresAt) { // Token has expired
-            const token = generateToken(); // Generate a new token
+            const token = await generateToken(); // Generate a new token
             accessToken.token = token;
             accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
             await accessToken.save(); // Update the token
@@ -52,6 +53,18 @@ const authenticateUser = async (emailAddress, password) => {
 
 
 export const login = async (req, res, next) => {
+    const secret = req.headers['secretkey'];
+    if (!secret) {
+        const error = new Error('Secret is missing in the request headers');
+        error.status = 400;
+        return next(error);
+    }
+    else if (secret !== process.env.SECRET_KEY) {
+        const error = new Error('Invalid Secret specified in the request headers');
+        error.status = 400;
+        return next(error);
+    }
+
     const emailAddress = req.body.emailAddress;
     const password = req.body.password;
 
@@ -67,21 +80,21 @@ export const login = async (req, res, next) => {
     }
 
     try {
-        const existUser = authenticateUser(emailAddress, password);
+        const existUser = await authenticateUser(emailAddress, password);
         if (!existUser) {
             const error = new Error('Incorrect Password or Email');
             error.status = 404;
             return next(error);
         }
 
-        const accessToken = generateUserAccessToken(existUser)
+        const accessToken = await generateUserAccessToken(existUser)
         if (!accessToken) {
             const error = new Error('Error generating access token');
             error.status = 400;
             return next(error);
         }
 
-        res.status(201).json({'User': existUser, 'accessToken': accessToken,
+        res.status(200).json({'User': existUser, 'accessToken': accessToken.token,
             'message': 'success'});
 
     } catch (error) {
