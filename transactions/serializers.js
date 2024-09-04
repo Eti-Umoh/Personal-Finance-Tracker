@@ -1,4 +1,4 @@
-export const transactionSerializer = (transaction) => {
+export const transactionSerializer = async (transaction) => {
     return {
         "amount": parseInt(transaction.amount),
         "date": transaction.date,
@@ -9,7 +9,7 @@ export const transactionSerializer = (transaction) => {
 };
 
 
-export const transactionsSerializer = (transactions) => {
+export const transactionsSerializer = async (transactions) => {
     const serializedTransactions = transactions.map(transaction => transactionSerializer(transaction));
     return serializedTransactions;
 };
