@@ -20,6 +20,19 @@ export const authMiddleware = async (req, res, next) => {
             return next(error);
         };
     }
+    else {
+        const secret = req.headers['secretkey'];
+        if (!secret) {
+            const error = new Error('Secret is missing in the request headers');
+            error.status = 400;
+            return next(error);
+        }
+        else if (secret !== process.env.SECRET_KEY) {
+            const error = new Error('Invalid Secret specified in the request headers');
+            error.status = 400;
+            return next(error);
+    }
+    }
 
     return next();
 };
