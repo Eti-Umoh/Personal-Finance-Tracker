@@ -81,7 +81,7 @@ export const login = async (req, res, next) => {
             return next(error);
         }
 
-        const serializedUser = userSerializer(existUser);
+        const serializedUser = await userSerializer(existUser);
         res.status(200).json({User: serializedUser, accessToken: accessToken.token,
             message: 'success'});
 

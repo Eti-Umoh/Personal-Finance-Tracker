@@ -31,7 +31,7 @@ export const createUser = async (req, res, next) => {
                 emailAddress: emailAddress,
                 password: hashPassword,
             });
-        const serializedUser = userSerializer(newUser);
+        const serializedUser = await userSerializer(newUser);
         res.status(201).json({User: serializedUser, message: 'success'});
     }
     catch (error) {
