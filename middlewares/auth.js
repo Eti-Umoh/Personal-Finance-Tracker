@@ -19,6 +19,8 @@ export const authMiddleware = async (req, res, next) => {
             error.status = 403;
             return next(error);
         };
+        // Attach the authenticated user to the request object
+        req.user = existUser;
     }
     else {
         const secret = req.headers['secretkey'];
@@ -31,7 +33,7 @@ export const authMiddleware = async (req, res, next) => {
             const error = new Error('Invalid Secret specified in the request headers');
             error.status = 400;
             return next(error);
-    }
+        }
     }
 
     return next();
