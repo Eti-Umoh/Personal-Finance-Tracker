@@ -6,8 +6,7 @@ export const createTransaction = async (req, res, next) => {
     const type = req.body.type;
     const description = req.body.description;
     const date = req.body.date;
-    const currentUser = 
-    const currentUserId = 
+    const currentUserId = req.user.id;
 
     if (!req.body.amount) {
         const error = new Error('amount is missing in the req body');
@@ -33,7 +32,7 @@ export const createTransaction = async (req, res, next) => {
                 desciption: description,
                 userId: currentUserId
             });
-        res.status(201).json({'message': 'success', 'User': newTransaction});
+        res.status(201).json({'message': 'success', 'Transaction': newTransaction});
     } catch (error) {
         next(error);
     }
