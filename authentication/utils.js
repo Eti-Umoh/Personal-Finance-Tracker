@@ -19,7 +19,6 @@ const generateUserAccessToken = async (existUser) => {
 
     if (!accessToken) {
         const token = await generateToken();
-        console.log(token)
         const newUserAccessToken = await UserAccessToken.create(
             {
                 token: token,
@@ -98,6 +97,28 @@ export const login = async (req, res, next) => {
             'message': 'success'});
 
     } catch (error) {
+        next(error);
+    }
+};
+
+
+export const validateAuth = async (token) => {
+    try {
+        const accessToken = await UserAccessToken.findOne({ where: { token: token } });
+        if (accessToken) {
+            if (accessToken.expiresAt > new Date()) {
+                const userId = accessToken.userId
+                const existUser = await User.findByPk({ where: { id: userId } });
+                if (existUser) {
+                    accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
+                    await accessToken.save();
+                    return existUser;
+                }
+            }
+        }
+        return null
+    }
+    catch (error) {
         next(error);
     }
 };
