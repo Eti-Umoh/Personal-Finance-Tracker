@@ -1,4 +1,5 @@
 import { Transaction } from "../models/models.js";
+import { transactionSerializer } from "./serializers.js";
 
 
 export const createTransaction = async (req, res, next) => {
@@ -32,7 +33,8 @@ export const createTransaction = async (req, res, next) => {
                 description: description,
                 userId: currentUserId
             });
-        res.status(201).json({'Transaction': newTransaction, 'message': 'success'});
+        const serializedTransaction = transactionSerializer(newTransaction)
+        res.status(201).json({'Transaction': serializedTransaction, 'message': 'success'});
     } catch (error) {
         next(error);
     }
