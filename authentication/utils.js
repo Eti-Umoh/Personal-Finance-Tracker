@@ -91,12 +91,11 @@ export const login = async (req, res, next) => {
 
 
 export const validateAuth = async (token) => {
-    try {
         const accessToken = await UserAccessToken.findOne({ where: { token: token } });
         if (accessToken) {
             if (accessToken.expiresAt > new Date()) {
                 const userId = accessToken.userId
-                const existUser = await User.findByPk({ where: { id: userId } });
+                const existUser = await User.findByPk(userId);
                 if (existUser) {
                     accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
                     await accessToken.save();
@@ -105,8 +104,4 @@ export const validateAuth = async (token) => {
             }
         }
         return null
-    }
-    catch (error) {
-        next(error);
-    }
-};
+    };

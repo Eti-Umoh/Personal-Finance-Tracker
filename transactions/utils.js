@@ -29,7 +29,7 @@ export const createTransaction = async (req, res, next) => {
                 amount: amount,
                 date: date,
                 txnType: type,
-                desciption: description,
+                description: description,
                 userId: currentUserId
             });
         res.status(201).json({'message': 'success', 'Transaction': newTransaction});
