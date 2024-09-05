@@ -6,6 +6,7 @@ import updateDb from './dbmigration.js';
 import transactionRouter from './transactions/routes.js';
 import userRouter from './users/routes.js';
 import authRouter from './authentication/routes.js';
+import dashboardRouter from './dashboard/routes.js';
 import { authMiddleware } from './middlewares/auth.js';
 
 const port = process.env.PORT || 8000;
@@ -29,6 +30,7 @@ app.use(authMiddleware);
 app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/dashboard', dashboardRouter);
 
 
 // errorHandlers
