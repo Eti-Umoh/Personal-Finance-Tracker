@@ -45,13 +45,34 @@ export const createTransaction = async (req, res, next) => {
 
 export const getAllTransactions = async (req, res, next) => {
     const currentUserId = req.user.id;
-    try {
-        const transactions = await Transaction.findAll({ where: { userId: currentUserId } });
-        const serializedTransactions = await transactionsSerializer(transactions);
-        res.status(200).json({Transactions: serializedTransactions, message: 'success'});
-    } 
-    catch (error) {
-        next(error);
+    const txnType = req.query.type;
+    if (txnType) {
+        if (!['debit', 'credit'].includes(txnType)) {
+            const error = new Error('type must be debit or credit');
+            error.status = 400;
+        }
+        else {
+            try {
+                const transactions = await Transaction.findAll({ where: {
+                    userId: currentUserId,
+                    txnType: txnType } });
+                const serializedTransactions = await transactionsSerializer(transactions);
+                res.status(200).json({Transactions: serializedTransactions, message: 'success'});
+            }
+            catch (error) {
+                next(error);
+            }
+        }
+    }
+    else {
+        try {
+            const transactions = await Transaction.findAll({ where: { userId: currentUserId } });
+            const serializedTransactions = await transactionsSerializer(transactions);
+            res.status(200).json({Transactions: serializedTransactions, message: 'success'});
+        } 
+        catch (error) {
+            next(error);
+        }
     }
 };
 
