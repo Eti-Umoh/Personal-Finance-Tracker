@@ -9,18 +9,27 @@ export const createUser = async (req, res, next) => {
     const emailAddress = req.body.emailAddress;
     const password = req.body.password;
 
-    if (!req.body.emailAddress) {
-        const error = new Error('emailAddress is missing in the req body');
-        error.status = 400;
-        return next(error);
-    }
-    else if (!req.body.password) {
-        const error = new Error('password is missing in the req body');
-        error.status = 400;
-        return next(error);
-    }
-
     try {
+        if (!emailAddress) {
+            const error = new Error('emailAddress is missing in the req body');
+            error.status = 400;
+            return next(error);
+        }
+        else {
+            const existUser = await User.findOne({ where: { emailAddress: emailAddress } });
+            if (existUser) {
+                const error = new Error('User with that email already exist');
+                error.status = 409;
+                return next(error);
+            }
+        }
+        if (!password) {
+            const error = new Error('password is missing in the req body');
+            error.status = 400;
+            return next(error);
+        }
+
+
         const saltRounds = 10; // Number of rounds to salt the password (higher is more secure but slower)
         const hashPassword = await bcrypt.hash(password, saltRounds);
 
