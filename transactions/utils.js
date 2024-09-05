@@ -80,7 +80,7 @@ export const updateTransaction = async (req, res, next) => {
         }
 
         const serializedTransaction = await transactionSerializer(transaction)
-        res.status(201).json({Transaction: serializedTransaction, message: 'success'});
+        res.status(200).json({Transaction: serializedTransaction, message: 'success'});
     }
     catch (error) {
         next(error);
