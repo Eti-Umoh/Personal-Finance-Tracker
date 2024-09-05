@@ -50,3 +50,26 @@ export const getCurrentUser = async (req, res, next) => {
             next(error);
         }
 };
+
+
+export const updateUser = async (req, res, next) => {
+    const currentUser = req.user;
+    try {
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const emailAddress = req.body.emailAddress;
+
+        if (currentUser) {
+            currentUser.firstName = firstName;
+            currentUser.lastName = lastName;
+            currentUser.emailAddress = emailAddress;
+            currentUser.save();
+
+            const serializedUser = await userSerializer(currentUser)
+            res.status(200).json({User: serializedUser, message: 'success'});
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+};
