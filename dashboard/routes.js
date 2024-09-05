@@ -1,8 +1,8 @@
 import express from 'express';
 const dashboardRouter = express.Router();
-import {  } from './utils.js';
+import { getStats } from './utils.js';
 
 
-dashboardRouter.gett('/', );
+dashboardRouter.get('/', getStats);
 
 export default dashboardRouter;

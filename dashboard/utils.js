@@ -1,18 +1,32 @@
 import { Transaction } from "../models/models.js";
 
 
-export const deleteTransaction = async (req, res, next) => {
+export const getStats = async (req, res, next) => {
     const currentUserId = req.user.id;
-    const txnId = req.params.txnId;
     try {
-        const transaction = await Transaction.findOne({ where: { id: txnId, userId: currentUserId } });
-        if (!transaction) {
-            const error = new Error(`Transaction with id :${txnId}: not found`);
-            error.status = 404;
-            return next(error);
-        }
-        await transaction.destroy();
-        res.status(200).json({message: 'transaction deleted successfully'});
+        const creditTxns = await Transaction.findAll({ where: {
+            userId: currentUserId,
+            txnType: "credit" } });
+        const debitTxns =  await Transaction.findAll({ where: {
+            userId: currentUserId,
+            txnType: "debit" } });
+
+        // Calculate total income and expense
+        let income = 0;
+        let expense = 0;
+
+        creditTxns.forEach(txn => {
+            income += parseFloat(txn.amount);});
+
+        debitTxns.forEach(txn => {
+            expense += parseFloat(txn.amount);});
+
+        // Calculate the difference (Profit/Loss)
+        const difference = income - expense;
+
+        res.status(200).json({
+            totalIncome: income, totalExpense: expense,
+            'Loss/Profit': difference, message: 'successful'});
     } 
     catch (error) {
         next(error);
