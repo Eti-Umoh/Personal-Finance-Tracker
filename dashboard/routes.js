@@ -3,6 +3,6 @@ const dashboardRouter = express.Router();
 import {  } from './utils.js';
 
 
-dashboardRouter.post('', );
+dashboardRouter.gett('/', );
 
 export default dashboardRouter;
