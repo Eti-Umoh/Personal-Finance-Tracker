@@ -2,6 +2,7 @@ import {  User, UserAccessToken } from "../models/models.js";
 import bcrypt from 'bcrypt';
 import { userSerializer } from "../users/serializers.js";
 
+
 const generateToken = async (length = 32) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let token = '';
@@ -108,18 +109,14 @@ export const validateAuth = async (token) => {
     };
 
 
-    export const logOut = async (token) => {
-        const accessToken = await UserAccessToken.findOne({ where: { token: token } });
-        if (accessToken) {
-            if (accessToken.expiresAt > new Date()) {
-                const userId = accessToken.userId
-                const existUser = await User.findByPk(userId);
-                if (existUser) {
-                    accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
-                    await accessToken.save();
-                    return existUser;
-                }
-            }
-        }
-        return null
-    };
+export const logOut = async (req, res, next) => {
+    const currentUserId = req.user.id
+    try {
+        const accessToken = await UserAccessToken.findOne({ where: { userId: currentUserId } });
+        await accessToken.destroy();
+        res.status(200).json({message: 'logged out'});
+    }
+    catch (error) {
+        next(error);
+    }
+};
