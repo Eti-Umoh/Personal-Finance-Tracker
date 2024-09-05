@@ -4,21 +4,32 @@ import sgMail from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Function to send an email
-export const sendEmail = async (req, res) => {
-    const { email, message } = req.body;
-
+export const sendEmail = async (user) => {
     const msg = {
-        to: 'etiumoh04@gmail.com', // Recipient email
+        to: user.emailAddress, // Recipient email
         from: process.env.SMTP_HOST_SENDER, // Sender email
-        subject: 'User Enquiry',
-        html: `<p>This email is from ${email}</p><p>${message}</p>`,
-    };
-
-    try {
-        const response = await sgMail.send(msg);
-        res.status(200).json({ message: 'Email sent successfully', response });
-    } catch (error) {
-        console.error('Error sending email: ', error);
-        res.status(500).json({ message: 'Failed to send email', error });
-    }
-};
+        subject: 'Finance Tracker Account Created',
+        html: `<p><b>Hi ${user.firstName},</b></p>
+                <p>Your account has been created, and here are your login details:</p>
+                <p><b>Email:</b> ${user.emailAddress}</p>
+                <p><b>Password:</b> ${user.password}</p>
+                <p>We recommend changing your password after the first login for security reasons.</p>
+                <br>
+                <p>Best regards</p>`,
+            };
+            try {
+                const response = await sgMail.send(msg);
+                return {
+                    success: true,
+                    message: 'Email sent successfully',
+                    response: response,
+                };
+            } catch (error) {
+                console.error('Error sending email: ', error);
+                return {
+                    success: false,
+                    message: 'Failed to send email',
+                    error: error,
+                };
+            }
+        };
