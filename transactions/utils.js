@@ -98,7 +98,7 @@ export const deleteTransaction = async (req, res, next) => {
             error.status = 404;
             return next(error);
         }
-        await transaction.destroy()
+        await transaction.destroy();
         res.status(200).json({message: 'transaction deleted successfully'});
     } 
     catch (error) {
