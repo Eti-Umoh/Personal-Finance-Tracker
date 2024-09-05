@@ -38,3 +38,15 @@ export const createUser = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const getCurrentUser = async (req, res, next) => {
+    const currentUser = req.user;
+        try {
+            const serializedUser = await userSerializer(currentUser);
+            res.status(200).json({User: serializedUser, message: 'success'});
+        } 
+        catch (error) {
+            next(error);
+        }
+};
