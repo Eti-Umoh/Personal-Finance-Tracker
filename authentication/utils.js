@@ -106,3 +106,20 @@ export const validateAuth = async (token) => {
         }
         return null
     };
+
+
+    export const logOut = async (token) => {
+        const accessToken = await UserAccessToken.findOne({ where: { token: token } });
+        if (accessToken) {
+            if (accessToken.expiresAt > new Date()) {
+                const userId = accessToken.userId
+                const existUser = await User.findByPk(userId);
+                if (existUser) {
+                    accessToken.expiresAt = new Date(new Date().getTime() + 120 * 60 * 1000);
+                    await accessToken.save();
+                    return existUser;
+                }
+            }
+        }
+        return null
+    };

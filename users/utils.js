@@ -1,4 +1,4 @@
-import { User } from "../models/models.js";
+import { User, UserAccessToken } from "../models/models.js";
 import bcrypt from "bcrypt";
 import { userSerializer } from "./serializers.js";
 
@@ -69,6 +69,20 @@ export const updateUser = async (req, res, next) => {
             res.status(200).json({User: serializedUser, message: 'success'});
         }
     }
+    catch (error) {
+        next(error);
+    }
+};
+
+
+export const deleteUser = async (req, res, next) => {
+    const currentUser = req.user
+    try {
+        const accessToken = await UserAccessToken.findOne({ where: { userId: currentUser.id } });
+        await accessToken.destroy();
+        await currentUser.destroy();
+        res.status(200).json({message: 'account deleted successfully'});
+    } 
     catch (error) {
         next(error);
     }
