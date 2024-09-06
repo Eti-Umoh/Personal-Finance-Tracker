@@ -132,6 +132,9 @@ export const changePassword = async (req, res, next) => {
             const hashPassword = await bcrypt.hash(newPassword, saltRounds);
             currentUser.password = hashPassword;
             currentUser.save();
+
+            const accessToken = await UserAccessToken.findOne({ where: { userId: currentUser.id } });
+            await accessToken.destroy();
         }
         else {
             const error = new Error('Incorrect Current password');
