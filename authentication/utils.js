@@ -1,4 +1,4 @@
-import {  User, UserAccessToken } from "../models/models.js";
+import {  User, UserAccessToken, UserPasswordResetToken } from "../models/models.js";
 import bcrypt from 'bcrypt';
 import { userSerializer } from "../users/serializers.js";
 
@@ -149,12 +149,25 @@ export const changePassword = async (req, res, next) => {
 };
 
 
+export const setUpResetToken = async (user) => {
+    let userResetToken = UserPasswordResetToken.findOne({ where: { userId: user.id } });
+    if (!userResetToken) {
+        userResetToken = UserPasswordResetToken.create(
+            {
+                resetToken: uuidv4().replace(/-/g, '').slice(0, 6),
+                userId: user.id
+            });
+    }
+    return userResetToken
+}
+
+
 export const resetPassword = async (req, res, next) => {
     const emailAddress = req.body.emailAddress;
     try {
         const existUser = await User.findOne({ where: { emailAddress: emailAddress } });
         if (existUser) {
-            
+
         }
         else {
             const error = new Error('User with that emailAddress does not exist');
