@@ -159,22 +159,57 @@ export const setUpResetToken = async (user) => {
             });
     }
     return userResetToken
-}
+};
 
 
-export const resetPassword = async (req, res, next) => {
+export const sendResetToken = async (req, res, next) => {
     const emailAddress = req.body.emailAddress;
     try {
         const existUser = await User.findOne({ where: { emailAddress: emailAddress } });
-        if (existUser) {
-
-        }
-        else {
+        if (!existUser) {
             const error = new Error('User with that emailAddress does not exist');
             error.status = 404;
             return next(error);
         }
+        const resetToken = await setUpResetToken(existUser)
         res.status(200).json({message: 'A token has been sent to the emailAddress'});
+    }
+    catch (error) {
+        next(error);
+    }
+};
+
+
+export const validateResetToken = async (token) => {
+    const userResetToken = UserPasswordResetToken.findOne({ where: { resetToken: token } });
+    if (!userResetToken || new Date() > userResetToken.expiresAt) {
+        return null;
+    }
+    return userResetToken;
+};
+
+
+export const resetPassword = async (req, res, next) => {
+    const password = req.body.password;
+    const resetToken = req.body.token; 
+    try {
+        const userResetToken = await validateResetToken(resetToken)
+        if (userResetToken) {
+            const existUser = await User.findByPk(userResetToken.userId);
+            const saltRounds = 10; // Number of rounds to salt the password (higher is more secure but slower)
+            const hashPassword = await bcrypt.hash(password, saltRounds);
+            existUser.password = hashPassword;
+            existUser.save();
+
+            const accessToken = await UserAccessToken.findOne({ where: { userId: existUser.id } });
+            await accessToken.destroy();
+        }
+        else {
+            const error = new Error('Invalid Password Reset Token');
+            error.status = 404;
+            return next(error);
+        }
+        res.status(200).json({message: 'successfully reset password'});
     }
     catch (error) {
         next(error);
