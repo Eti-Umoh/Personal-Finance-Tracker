@@ -1,13 +1,15 @@
 import { User, UserAccessToken } from "../models/models.js";
 import bcrypt from "bcrypt";
 import { userSerializer } from "./serializers.js";
+import { v4 as uuidv4 } from 'uuid';
+import { sendEmail } from "../api_utils.js";
 
 
 export const createUser = async (req, res, next) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const emailAddress = req.body.emailAddress;
-    const password = req.body.password;
+    const password = uuidv4().replace(/-/g, '').slice(0, 8);
 
     try {
         if (!emailAddress) {
@@ -23,12 +25,6 @@ export const createUser = async (req, res, next) => {
                 return next(error);
             }
         }
-        if (!password) {
-            const error = new Error('password is missing in the req body');
-            error.status = 400;
-            return next(error);
-        }
-
 
         const saltRounds = 10; // Number of rounds to salt the password (higher is more secure but slower)
         const hashPassword = await bcrypt.hash(password, saltRounds);
@@ -40,8 +36,16 @@ export const createUser = async (req, res, next) => {
                 emailAddress: emailAddress,
                 password: hashPassword,
             });
+        
+        const result = await sendEmail(newUser, password);
+        if (result.success) {
+            console.log(result.message);
+        } else {
+            console.error(result.message, result.error);
+        }
         const serializedUser = await userSerializer(newUser);
-        res.status(201).json({User: serializedUser, message: 'success'});
+        res.status(201).json({User: serializedUser,
+            message: 'Account created and login credentials have been sent to your email'});
     }
     catch (error) {
         next(error);
