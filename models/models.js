@@ -92,6 +92,33 @@ UserAccessToken.init({
 });
 
 
+class UserPasswordResetToken extends Model {}
+UserPasswordResetToken.init({
+    resetToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    userId: { // Foreign key for User
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'users', // 'users' refers to table name
+            key: 'id',      // 'id' refers to column name in users table
+        }
+    },
+    expiresAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal("NOW() + INTERVAL '15 MINUTES'"),
+    },
+}, {
+    sequelize,
+    modelName: 'UserAccessToken',
+    tableName: 'userAccessTokens',
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
+});
+
+
 // A transaction belongs to a user
 Transaction.belongsTo(User, {
     foreignKey: 'userId',
@@ -116,4 +143,16 @@ User.hasOne(UserAccessToken, {
     as: 'userAccessTokens', // Optional: alias for the association
 });
 
-export { Transaction, User, UserAccessToken};
+// A reset token belongs to a user
+UserPasswordResetToken.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'owner', // Optional: alias for the association
+});
+
+// A user can have one reset token
+User.hasOne(UserPasswordResetToken, {
+    foreignKey: 'userId',
+    as: 'userPasswordResetTokens', // Optional: alias for the association
+});
+
+export { Transaction, User, UserAccessToken, UserPasswordResetToken};

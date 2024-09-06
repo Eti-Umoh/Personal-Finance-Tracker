@@ -147,3 +147,23 @@ export const changePassword = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const resetPassword = async (req, res, next) => {
+    const emailAddress = req.body.emailAddress;
+    try {
+        const existUser = await User.findOne({ where: { emailAddress: emailAddress } });
+        if (existUser) {
+            
+        }
+        else {
+            const error = new Error('User with that emailAddress does not exist');
+            error.status = 404;
+            return next(error);
+        }
+        res.status(200).json({message: 'A token has been sent to the emailAddress'});
+    }
+    catch (error) {
+        next(error);
+    }
+};
