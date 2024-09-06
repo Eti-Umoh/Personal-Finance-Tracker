@@ -4,6 +4,8 @@ import { validateAuth } from "../authentication/utils.js";
 export const authMiddleware = async (req, res, next) => {
     const tokenCondition = (
         !req.path.startsWith("/api/v1/auth/login") &&
+        !req.path.startsWith("/api/v1/auth/reset-password") &&
+        !req.path.startsWith("/api/v1/auth/send-token") &&
         !req.path.startsWith("/api/v1/user/signup")
     );
     if (tokenCondition) {

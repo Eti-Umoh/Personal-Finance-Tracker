@@ -7,7 +7,7 @@ import { login, logOut, changePassword,
 authRouter.post('/login', login);
 authRouter.post('/logout', logOut);
 authRouter.patch('/password', changePassword);
-authRouter.put('/password', resetPassword);
-authRouter.post('/sendToken', sendResetToken);
+authRouter.put('/reset-password', resetPassword);
+authRouter.post('/send-token', sendResetToken);
 
 export default authRouter;

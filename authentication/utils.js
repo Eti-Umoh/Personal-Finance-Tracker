@@ -1,6 +1,7 @@
 import {  User, UserAccessToken, UserPasswordResetToken } from "../models/models.js";
 import bcrypt from 'bcrypt';
 import { userSerializer } from "../users/serializers.js";
+import { sendEmail } from "../api_utils.js";
 
 
 const generateToken = async (length = 32) => {
@@ -172,6 +173,12 @@ export const sendResetToken = async (req, res, next) => {
             return next(error);
         }
         const resetToken = await setUpResetToken(existUser)
+        const result = await sendEmail(newUser, password);
+        if (result.success) {
+            console.log(result.message);
+        } else {
+            console.error(result.message, result.error);
+        }
         res.status(200).json({message: 'A token has been sent to the emailAddress'});
     }
     catch (error) {
