@@ -113,8 +113,8 @@ UserPasswordResetToken.init({
     },
 }, {
     sequelize,
-    modelName: 'UserAccessToken',
-    tableName: 'userAccessTokens',
+    modelName: 'UserPasswordResetToken',
+    tableName: 'userPasswordResetTokens',
     timestamps: true, // Automatically adds createdAt and updatedAt fields
 });
 

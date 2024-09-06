@@ -2,6 +2,7 @@ import {  User, UserAccessToken, UserPasswordResetToken } from "../models/models
 import bcrypt from 'bcrypt';
 import { userSerializer } from "../users/serializers.js";
 import { sendToken } from "../api_utils.js";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const generateToken = async (length = 32) => {
@@ -151,9 +152,9 @@ export const changePassword = async (req, res, next) => {
 
 
 export const setUpResetToken = async (user) => {
-    let userResetToken = UserPasswordResetToken.findOne({ where: { userId: user.id } });
+    let userResetToken = await UserPasswordResetToken.findOne({ where: { userId: user.id } });
     if (!userResetToken) {
-        userResetToken = UserPasswordResetToken.create(
+        userResetToken = await UserPasswordResetToken.create(
             {
                 resetToken: uuidv4().replace(/-/g, '').slice(0, 6),
                 userId: user.id
@@ -209,7 +210,9 @@ export const resetPassword = async (req, res, next) => {
             existUser.save();
 
             const accessToken = await UserAccessToken.findOne({ where: { userId: existUser.id } });
-            await accessToken.destroy();
+            if (accessToken){
+                await accessToken.destroy();
+            }
         }
         else {
             const error = new Error('Invalid Password Reset Token');
