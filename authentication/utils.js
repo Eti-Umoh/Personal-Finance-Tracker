@@ -110,11 +110,35 @@ export const validateAuth = async (token) => {
 
 
 export const logOut = async (req, res, next) => {
-    const currentUserId = req.user.id
+    const currentUserId = req.user.id;
     try {
         const accessToken = await UserAccessToken.findOne({ where: { userId: currentUserId } });
         await accessToken.destroy();
         res.status(200).json({message: 'logged out'});
+    }
+    catch (error) {
+        next(error);
+    }
+};
+
+
+export const changePassword = async (req, res, next) => {
+    const currentUser = req.user;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+    try {
+        if (await bcrypt.compare(password, currentUser.password)) {
+            const saltRounds = 10; // Number of rounds to salt the password (higher is more secure but slower)
+            const hashPassword = await bcrypt.hash(newPassword, saltRounds);
+            currentUser.password = hashPassword;
+            currentUser.save();
+        }
+        else {
+            const error = new Error('Incorrect Current password');
+            error.status = 403;
+            return next(error);
+        }
+        res.status(200).json({message: 'successfully changed password'});
     }
     catch (error) {
         next(error);
